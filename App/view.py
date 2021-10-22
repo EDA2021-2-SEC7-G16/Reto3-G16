@@ -36,10 +36,10 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Inicializar analizador")
+    print("2- Cargar información de avistamientos")
 
-catalog = None
+cont = None
 
 """
 Menu principal
@@ -48,10 +48,18 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+        print("\nInicializando...")
+        # cont es el controlador que se usará de acá en adelante
+        cont = controller.init()
 
     elif int(inputs[0]) == 2:
-        pass
+        print("\nCargando información de avistamientos...")
+        controller.loadData(cont)
+        print('Avistamientos cargados: ' + str(controller.ufoSize(cont)))
+        print('Altura del arbol: ' + str(controller.indexHeight(cont)))
+        print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
+        print('Menor llave: ' + str(controller.minKey(cont)))
+        print('Mayor llave: ' + str(controller.maxKey(cont)))
 
     else:
         sys.exit(0)
