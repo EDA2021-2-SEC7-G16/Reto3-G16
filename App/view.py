@@ -27,6 +27,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
+from time import process_time
 assert cf
 
 
@@ -41,20 +42,33 @@ def printUfoData(ufo):
     print('La fecha del avistamiento es ' + ufo['datetime'] + ', en la ciudad de ' + ufo['city'] + ', en el país ' + ufo['country'] + '.')
     print('La duración del avistamiento fue de ' + ufo['duration (seconds)'] + ' segundos, y su forma fue ' + ufo['shape'] + '.\n')
 
-def printFirstFive(tree):
-    print('\n Primeros 5 avistamientos: \n')
+def printFirstFive(ufoList):
+    print('\nPrimeros 5 avistamientos: \n')
     for n in range(1, 6):
-        printUfoData(lt.getElement(cont['ufos'], n))
+        printUfoData(lt.getElement(ufoList, n))
 
-def printLastFive(tree, size):
-    print('\n Últimos 5 avistamientos: \n')
+def printLastFive(ufoList, size):
+    print('\nÚltimos 5 avistamientos: \n')
     for n in range(0, 5):
-        printUfoData(lt.getElement(cont['ufos'], (size-n)))
+        printUfoData(lt.getElement(ufoList, (size-n)))
+
+def printFirstThree(ufoList):
+    print('\nPrimeros 3 avistamientos: \n')
+    for n in range(1, 4):
+        printUfoData(lt.getElement(ufoList, n))
+
+def printLastThree(ufoList, size):
+    print('Últimos 3 avistamientos: \n')
+    for n in range(0, 3):
+        printUfoData(lt.getElement(ufoList, (size-n)))
 
 def printMenu():
     print("Bienvenido")
     print("1- Inicializar analizador")
     print("2- Cargar información de avistamientos")
+    print("3- Contar los avistamientos en una ciudad")
+
+    print("5- Contar avistamientos por hora/minutos del día")
 
 cont = None
 
@@ -77,9 +91,34 @@ while True:
         print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
         print('Menor llave: ' + str(controller.minKey(cont)))
         print('Mayor llave: ' + str(controller.maxKey(cont)))
-
         printFirstFive(cont['ufos'])
-        printLastFive(cont['ufos'], mp.size(cont['ufos']))
+        printLastFive(cont['ufos'], lt.size(cont['ufos']))
+
+    elif int(inputs[0]) == 3:
+        city = input('¿Qué ciudad desea consultar? ')
+        startTime = process_time()
+        answer = controller.sightingsInCity(cont, city)
+        stopTime = process_time()
+        execTime = (stopTime - startTime) * 1000
+
+        print('El tiempo de ejecución fue de ' + str(execTime) + ' milisegundos. \n')
+        print('En ' + str(answer[0]) + ' distintas ciudades, ha habido registro de avistamientos.')
+        print('En la ciudad de ' + city + ', hubo un total de ' + str(answer[1]) + ' avistamientos. \n')
+
+    elif int(inputs[0]) == 5:
+        lowerLimit = input('¿Desde qué hora desea consultar los avistamientos? (formato HH:MM) ')
+        upperLimit = input('¿Hasta qué hora desea consultar los avistamientos? (formato HH:MM) ')
+        print('\n')
+        startTime = process_time()
+        answer = controller.sightingsInRange(cont, lowerLimit, upperLimit)
+        stopTime = process_time()
+        execTime = (stopTime - startTime) * 1000
+
+        print('El tiempo de ejecución fue de ' + str(execTime) + ' milisegundos.')
+        print('Dentro del rango de ' + str(lowerLimit) + ' y ' + str(upperLimit) + ' hubo ' + str(answer[1]) + ' avistamientos.')
+        size = lt.size(answer[0])
+        printFirstThree(answer[0])
+        printLastThree(answer[0], size)
 
     else:
         sys.exit(0)

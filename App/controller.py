@@ -45,11 +45,13 @@ def loadData(analyzer):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    ufosfile = cf.data_dir + 'UFOS-utf8-50pct.csv'
+    ufosfile = cf.data_dir + 'UFOS-utf8-small.csv'
     input_file = csv.DictReader(open(ufosfile, encoding="utf-8"),
                                 delimiter=",")
     for ufo in input_file:
         model.addUfo(analyzer, ufo)
+        model.addSightingsPerCity(analyzer, ufo)
+        model.addSightingTimes(analyzer, ufo)
     return analyzer
 
 # Funciones de ordenamiento
@@ -89,3 +91,9 @@ def maxKey(analyzer):
     La mayor llave del arbol
     """
     return model.maxKey(analyzer)
+
+def sightingsInCity(analyzer, city):
+    return model.sightingsInCity(analyzer, city)
+
+def sightingsInRange(analyzer, lowerLimit, upperLimit):
+    return model.sightingsInRange(analyzer, lowerLimit, upperLimit)
