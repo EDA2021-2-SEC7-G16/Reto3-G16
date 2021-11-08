@@ -2,6 +2,9 @@
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 
+Req. 1 y 3 - José Daniel Montero Gutiérrez, 202012732, j.monterog@uniandes.edu.co
+Req. 2 y 4 - Wyo Hann Chu Mendez, 202015066, w.chu@uniandes.edu.co
+
 -Lib
 Este directorio contiene todo el código de base que se entrega para el funcionamiento del curso.  Dentro de este directorio encuentran:
     

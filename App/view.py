@@ -24,6 +24,9 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
+from DISClib.ADT import orderedmap as om
+from DISClib.DataStructures import mapentry as me
 assert cf
 
 
@@ -33,6 +36,20 @@ Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
+
+def printUfoData(ufo):
+    print('La fecha del avistamiento es ' + ufo['datetime'] + ', en la ciudad de ' + ufo['city'] + ', en el país ' + ufo['country'] + '.')
+    print('La duración del avistamiento fue de ' + ufo['duration (seconds)'] + ' segundos, y su forma fue ' + ufo['shape'] + '.\n')
+
+def printFirstFive(tree):
+    print('\n Primeros 5 avistamientos: \n')
+    for n in range(1, 6):
+        printUfoData(lt.getElement(cont['ufos'], n))
+
+def printLastFive(tree, size):
+    print('\n Últimos 5 avistamientos: \n')
+    for n in range(0, 5):
+        printUfoData(lt.getElement(cont['ufos'], (size-n)))
 
 def printMenu():
     print("Bienvenido")
@@ -60,6 +77,9 @@ while True:
         print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
         print('Menor llave: ' + str(controller.minKey(cont)))
         print('Mayor llave: ' + str(controller.maxKey(cont)))
+
+        printFirstFive(cont['ufos'])
+        printLastFive(cont['ufos'], mp.size(cont['ufos']))
 
     else:
         sys.exit(0)
