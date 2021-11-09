@@ -25,12 +25,14 @@
  """
 
 
+from time import strptime
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as merge
 import datetime
 assert cf
 
@@ -218,6 +220,7 @@ def sightingsInCity(analyzer, city):
 
     addFirstThree(sightingsTree, firstLastThree)
     addLastThree(sightingsTree, firstLastThree)
+    firstLastThree = merge.sort(firstLastThree, compareTime)
 
     return citiesSightings, sightingsAmmount, firstLastThree
 
@@ -279,6 +282,7 @@ def sightingsInRange(analyzer, lowerLimit, upperLimit):
         pos += 1
 
     sightingsAmmount = lt.size(returnList)
+    returnList = merge.sort(returnList, compareHourTime)
 
     return returnList, sightingsAmmount
 
@@ -294,6 +298,18 @@ def compareIds(id1, id2):
         return 1
     else:
         return -1
+
+def compareTime(ufo1, ufo2):
+    d1 = datetime.datetime.strptime(str(ufo1['datetime']), '%Y-%m-%d %H:%M:%S')
+    d2 = datetime.datetime.strptime(str(ufo2['datetime']), '%Y-%m-%d %H:%M:%S')
+    return d1 < d2
+
+def compareHourTime(ufo1, ufo2):
+    d1 = datetime.datetime.strptime(ufo1['datetime'], '%Y-%m-%d %H:%M:%S')
+    d1 = datetime.datetime.strftime(d1, '%H:%M')
+    d2 = datetime.datetime.strptime(ufo2['datetime'], '%Y-%m-%d %H:%M:%S')
+    d2 = datetime.datetime.strftime(d2, '%H:%M')
+    return d1 < d2
 
 def compareDates(date1, date2):
     """

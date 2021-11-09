@@ -39,7 +39,7 @@ operación solicitada
 """
 
 def printUfoData(ufo):
-    print('La fecha del avistamiento es ' + ufo['datetime'] + ', en la ciudad de ' + ufo['city'] + ', en el país ' + ufo['country'] + '.')
+    print('La fecha del avistamiento es ' + str(ufo['datetime']) + ', en la ciudad de ' + ufo['city'] + ', en el país ' + ufo['country'] + '.')
     print('La duración del avistamiento fue de ' + ufo['duration (seconds)'] + ' segundos, y su forma fue ' + ufo['shape'] + '.\n')
 
 def printFirstFive(ufoList):
@@ -49,8 +49,11 @@ def printFirstFive(ufoList):
 
 def printLastFive(ufoList, size):
     print('\nÚltimos 5 avistamientos: \n')
-    for n in range(0, 5):
-        printUfoData(lt.getElement(ufoList, (size-n)))
+    printUfoData(lt.getElement(ufoList, (size-4)))
+    printUfoData(lt.getElement(ufoList, (size-3)))
+    printUfoData(lt.getElement(ufoList, (size-2)))
+    printUfoData(lt.getElement(ufoList, (size-1)))
+    printUfoData(lt.getElement(ufoList, size))
 
 def printFirstThree(ufoList):
     print('\nPrimeros 3 avistamientos: \n')
@@ -59,8 +62,9 @@ def printFirstThree(ufoList):
 
 def printLastThree(ufoList, size):
     print('Últimos 3 avistamientos: \n')
-    for n in range(0, 3):
-        printUfoData(lt.getElement(ufoList, (size-n)))
+    printUfoData(lt.getElement(ufoList, (size-2)))
+    printUfoData(lt.getElement(ufoList, (size-1)))
+    printUfoData(lt.getElement(ufoList, size))
 
 def printMenu():
     print("Bienvenido")
@@ -104,6 +108,8 @@ while True:
         print('El tiempo de ejecución fue de ' + str(execTime) + ' milisegundos. \n')
         print('En ' + str(answer[0]) + ' distintas ciudades, ha habido registro de avistamientos.')
         print('En la ciudad de ' + city + ', hubo un total de ' + str(answer[1]) + ' avistamientos. \n')
+        printFirstThree(answer[2])
+        printLastThree(answer[2], lt.size(answer[2]))
 
     elif int(inputs[0]) == 5:
         lowerLimit = input('¿Desde qué hora desea consultar los avistamientos? (formato HH:MM) ')
