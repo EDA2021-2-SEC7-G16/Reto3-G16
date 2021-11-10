@@ -42,6 +42,9 @@ def printUfoData(ufo):
     print('La fecha del avistamiento es ' + str(ufo['datetime']) + ', en la ciudad de ' + ufo['city'] + ', en el país ' + ufo['country'] + '.')
     print('La duración del avistamiento fue de ' + ufo['duration (seconds)'] + ' segundos, y su forma fue ' + ufo['shape'] + '.\n')
 
+def printLatestSighting(key, size):
+    print('La hora más tardía con avistamientos fue ' + str(key) + ', con ' + str(size) + ' avistamientos.')
+
 def printFirstFive(ufoList):
     print('\nPrimeros 5 avistamientos: \n')
     for n in range(1, 6):
@@ -120,8 +123,9 @@ while True:
         stopTime = process_time()
         execTime = (stopTime - startTime) * 1000
 
-        print('El tiempo de ejecución fue de ' + str(execTime) + ' milisegundos.')
+        print('El tiempo de ejecución fue de ' + str(execTime) + ' milisegundos. \n')
         print('Dentro del rango de ' + str(lowerLimit) + ' y ' + str(upperLimit) + ' hubo ' + str(answer[1]) + ' avistamientos.')
+        printLatestSighting(answer[2], answer[3])
         size = lt.size(answer[0])
         printFirstThree(answer[0])
         printLastThree(answer[0], size)

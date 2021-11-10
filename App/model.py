@@ -263,6 +263,10 @@ def addLastThree(tree, returnList):
             pos += 1
 
 def sightingsInRange(analyzer, lowerLimit, upperLimit):
+    latestSightKey = om.maxKey(analyzer['sightingsIndex'])
+    latestSight = om.get(analyzer['sightingsIndex'], latestSightKey)
+    latestSightSize = latestSight['value']['root']['size']
+
     sightingsTree = analyzer['sightingsIndex']
     sightings = om.values(sightingsTree, lowerLimit, upperLimit)
     returnList = lt.newList('ARRAY_LIST')
@@ -283,8 +287,8 @@ def sightingsInRange(analyzer, lowerLimit, upperLimit):
 
     sightingsAmmount = lt.size(returnList)
     returnList = merge.sort(returnList, compareHourTime)
-
-    return returnList, sightingsAmmount
+    
+    return returnList, sightingsAmmount, latestSight['key'], latestSightSize
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
