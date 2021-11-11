@@ -193,8 +193,12 @@ while True:
         time_sup = input('Digite la duracion en segundos hasta la que desea consultar')
         time_inf = float(time_inf) 
         time_sup = float(time_sup) 
-        printSightingsByDuration(time_inf,time_sup,cont)
         
+        startTime = process_time()
+        printSightingsByDuration(time_inf,time_sup,cont)
+        stopTime = process_time()
+        execTime = (stopTime - startTime) * 1000
+        print('El tiempo de ejecución fue de ' + str(execTime) + ' milisegundos. \n')
     
 
     elif int(inputs[0]) == 5:
@@ -216,8 +220,12 @@ while True:
     elif int(inputs[0]) == 6:
         date_inf = input('Digite la la fecha inferior en el fomrato AAAA-MM-DD')
         date_sup = input('Digite la la fecha superior en el fomrato AAAA-MM-DD')
-         
+        
+        startTime = process_time()
         printSightingsByDate(date_inf,date_sup,cont)
+        stopTime = process_time()
+        execTime = (stopTime - startTime) * 1000
+        print('El tiempo de ejecución fue de ' + str(execTime) + ' milisegundos. \n')
 
     elif int(inputs[0]) == 7:
         longitude_inf = float(input('Digite la longitud minima'))
