@@ -64,6 +64,7 @@ def newAnalyzer():
     analyzer['cityIndex'] = om.newMap(omaptype='RBT')
     analyzer['sightingsIndex'] = om.newMap(omaptype='RBT')
     analyzer['durationIndex'] = om.newMap(omaptype='RBT')
+    analyzer['latitudeIndex'] = om.newMap(omaptype='RBT')
 
     return analyzer
 
@@ -131,7 +132,21 @@ def addSigtingDatess(analyzer,ufo):
         om.put(datesTree, date, dateInfo)
     else:
         dateInfo = me.getValue(entry)
-        om.put(dateInfo, sightingInfo['datetime'], sightingInfo)             
+        om.put(dateInfo, sightingInfo['datetime'], sightingInfo)     
+
+def addSigtingLatitudes(analyzer,ufo):
+    latitudeTree = analyzer['latitudeIndex']
+    sightingInfo = relevantInfo(ufo)
+    latitude = float(ufo['latitude'])
+    entry = om.get(latitudeTree, latitude)
+
+    if entry is None:
+        latitudeInfo = om.newMap()
+        om.put(latitudeInfo, sightingInfo['datetime'], sightingInfo)
+        om.put(latitudeTree, latitude, latitudeInfo)
+    else:
+        latitudeInfo = me.getValue(entry)
+        om.put(latitudeInfo, sightingInfo['datetime'], sightingInfo)                    
 
 def updateDateIndex(map, ufo):
     """
@@ -415,7 +430,38 @@ def rangedSightingsBydate(date_inf,date_sup,cont):
 
     return returnList, sightingsAmmount        
 
- 
+def rangedSightingsByposition(latitude_inf,latitude_sup,longitude_inf,longitude_sup,cont):
+
+    sightingsTree = cont
+    
+    sightings = om.values(sightingsTree, latitude_inf, latitude_sup)
+
+    
+
+
+    returnList = lt.newList('ARRAY_LIST')
+
+    sightingsSize = lt.size(sightings)
+    pos = 1
+    while pos <= sightingsSize:
+        subTree = lt.getElement(sightings, pos)
+        subList = om.valueSet(subTree)
+        subLSize = lt.size(subList)
+        n = 1
+
+        while n <= subLSize:
+            sighting = lt.getElement(subList, n)
+            
+            if float(sighting['longitude']) >= float(longitude_inf) and float(sighting['longitude']) <= float(longitude_sup):
+                lt.addLast(returnList, sighting)
+                n +=1
+        pos += 1
+
+    sightingsAmmount = lt.size(returnList)
+    
+    returnList = merge.sort(returnList, compareLatitude)
+
+    return returnList, sightingsAmmount   
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
@@ -480,4 +526,16 @@ def compareShapes(shape1, shape2):
 def compareDurationsSeconds(d1,d2):
 
     return int(str(d1['duration (seconds)']).replace('.0','')) < int(str(d2['duration (seconds)']).replace('.0','')) 
+
+
+def compareLatitude(l1, l2):
+    """
+    Compara dos fechas
+    """
+    if (l1['latitude'] == l2['latitude']):
+        return 0
+    elif (l1['latitude'] > l2['latitude']):
+        return 1
+    else:
+        return -1     
 # Funciones de ordenamiento

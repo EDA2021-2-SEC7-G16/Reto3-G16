@@ -54,6 +54,7 @@ def loadData(analyzer):
         model.addSightingTimes(analyzer, ufo)
         model.addSigtingDuration(analyzer,ufo)
         model.addSigtingDatess(analyzer,ufo)
+        model.addSigtingLatitudes(analyzer,ufo)
     return analyzer
 
 # Funciones de ordenamiento
@@ -124,4 +125,8 @@ def rangedSightingsBydate(date_inf,date_sup,cont):
 
     return model.rangedSightingsBydate(date_inf,date_sup,cont)    
 
+def rangedSightingsByposition(latitude_inf,latitude_sup,longitude_inf,longitude_sup,cont):
 
+    cont = cont["latitudeIndex"]
+
+    return model.rangedSightingsByposition(latitude_inf,latitude_sup,longitude_inf,longitude_sup,cont)   

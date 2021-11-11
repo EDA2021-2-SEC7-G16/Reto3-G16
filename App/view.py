@@ -77,6 +77,7 @@ def printMenu():
     print("4- Contar los avistmientos por duracion")
     print("5- Contar avistamientos por hora/minutos del día")
     print("6- Contar los avistamientos en un rango de fechas")
+    print("7- Contar los avistamientos de una zona geografica")
 
 def printSightingsByDuration(time_inf,time_sup,cont):
 
@@ -137,6 +138,15 @@ def printSightingsByDate(date_inf,date_sup,cont):
             print('Ciudad: ', lt.getElement(final_trees,x)['city'])
             print('Latitud: ', lt.getElement(final_trees,x)['latitude'])
             print('Longitud: ', lt.getElement(final_trees,x)['longitude'])
+
+def printSightingsByLatitude(latitude_inf,latitude_sup,longitude_inf,longitude_sup,cont):
+
+
+    final_trees, sizeSightings  = controller.rangedSightingsByposition(latitude_inf,latitude_sup,longitude_inf,longitude_sup,cont)
+
+    print('Hay ', sizeSightings , ' avistamientos en el rango')
+
+              
          
 
      
@@ -208,6 +218,15 @@ while True:
         date_sup = input('Digite la la fecha superior en el fomrato AAAA-MM-DD')
          
         printSightingsByDate(date_inf,date_sup,cont)
+
+    elif int(inputs[0]) == 7:
+        longitude_inf = float(input('Digite la longitud minima'))
+        longitude_sup = float(input('Digite la longitud maxima'))
+        latitude_inf = float(input('Digite la latitud minima'))
+        latitude_sup = float(input('Digite la latitud maxima'))
+        
+         
+        printSightingsByLatitude(latitude_inf,latitude_sup,longitude_inf,longitude_sup,cont)
 
     else:
         sys.exit(0)
