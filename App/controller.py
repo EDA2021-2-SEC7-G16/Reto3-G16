@@ -52,6 +52,7 @@ def loadData(analyzer):
         model.addUfo(analyzer, ufo)
         model.addSightingsPerCity(analyzer, ufo)
         model.addSightingTimes(analyzer, ufo)
+        model.addSigtingDuration(analyzer,ufo)
     return analyzer
 
 # Funciones de ordenamiento
@@ -97,3 +98,17 @@ def sightingsInCity(analyzer, city):
 
 def sightingsInRange(analyzer, lowerLimit, upperLimit):
     return model.sightingsInRange(analyzer, lowerLimit, upperLimit)
+
+def totalSigtingsWitLongestDuration(cont):
+
+    cont = cont["durationIndex"]
+
+    return model.totalSigtingsWitLongestDuration(cont)
+    
+def sightingsByLimitTimes(time_inf,time_sup,cont):
+
+    cont = cont["durationIndex"]
+
+    return model.sightingsByLimitTimes(time_inf,time_sup,cont)
+
+

@@ -62,6 +62,7 @@ def newAnalyzer():
                                       comparefunction=compareDates)
     analyzer['cityIndex'] = om.newMap(omaptype='RBT')
     analyzer['sightingsIndex'] = om.newMap(omaptype='RBT')
+    analyzer['durationIndex'] = om.newMap(omaptype='RBT')
 
     return analyzer
 
@@ -101,6 +102,20 @@ def addSightingTimes(analyzer, ufo):
     else:
         timeInfo = me.getValue(entry)
         om.put(timeInfo, sightingInfo['datetime'], ufo)
+
+def addSigtingDuration(analyzer, ufo):
+    durationTree = analyzer['durationIndex']
+    sightingInfo = relevantInfo(ufo)
+    duration = float(str(ufo['duration (seconds)']).replace('.0',''))
+    entry = om.get(durationTree, duration)
+
+    if entry is None:
+        durationInfo = om.newMap()
+        om.put(durationInfo, sightingInfo['datetime'], sightingInfo)
+        om.put(durationTree, duration, durationInfo)
+    else:
+        durationInfo = me.getValue(entry)
+        om.put(durationInfo, sightingInfo['datetime'], sightingInfo)        
 
 def updateDateIndex(map, ufo):
     """
@@ -174,7 +189,7 @@ def relevantInfo(ufo):
                     'shape': ufo['shape'],
                     'country': ufo['country'],
                     'city': ufo['city'],
-                    'duration (seconds)': ufo['duration (seconds)']}
+                    'duration (seconds)': str(ufo['duration (seconds)']).replace('.0','')}
     return relevantData
 
 # Funciones de consulta
@@ -286,6 +301,51 @@ def sightingsInRange(analyzer, lowerLimit, upperLimit):
 
     return returnList, sightingsAmmount
 
+
+def totalSigtingsWitLongestDuration(cont):
+
+    maxDuration = om.maxKey(cont)
+
+    maxDurationTree = om.get(cont,maxDuration)
+
+    maxDurationTree = maxDurationTree['value']
+
+    sizeMaxDuration = om.size(maxDurationTree)
+
+    return maxDuration, sizeMaxDuration
+
+def sightingsByLimitTimes(time_inf,time_sup,cont):
+
+    print(time_inf,time_sup)
+
+    sightingsTree = cont
+    sightings = om.values(sightingsTree, time_inf, time_sup)
+    returnList = lt.newList('ARRAY_LIST')
+    sightingsSize = lt.size(sightings)
+    pos = 1
+
+    while pos <= sightingsSize:
+        subTree = lt.getElement(sightings, pos)
+        subList = om.valueSet(subTree)
+        subLSize = lt.size(subList)
+        n = 1
+
+        while n <= subLSize:
+            sighting = lt.getElement(subList, n)
+            lt.addLast(returnList, sighting)
+            n +=1
+        pos += 1
+
+    sightingsAmmount = lt.size(returnList)
+    returnList = merge.sort(returnList, compareDurationsSeconds)
+
+    return returnList, sightingsAmmount
+        
+        
+
+ 
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def compareIds(id1, id2):
@@ -334,5 +394,7 @@ def compareShapes(shape1, shape2):
     else:
         return -1
 
+def compareDurationsSeconds(d1,d2):
 
+    return int(str(d1['duration (seconds)']).replace('.0','')) < int(str(d2['duration (seconds)']).replace('.0','')) 
 # Funciones de ordenamiento

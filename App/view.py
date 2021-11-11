@@ -71,8 +71,39 @@ def printMenu():
     print("1- Inicializar analizador")
     print("2- Cargar información de avistamientos")
     print("3- Contar los avistamientos en una ciudad")
-
+    print("4- Contar los avistmientos por duracion")
     print("5- Contar avistamientos por hora/minutos del día")
+
+def printSightingsByDuration(time_inf,time_sup,cont):
+
+    maxDuration, sizeMaxDuration = controller.totalSigtingsWitLongestDuration(cont)
+
+    print('La mayor duracion fue de: ', maxDuration, ' con ', sizeMaxDuration, ' avistamientos con esa duracion')
+
+    rangedSightings, sizeSigtings = controller.sightingsByLimitTimes(time_inf,time_sup,cont)
+
+    print('Hay ', sizeSigtings, ' avistamientos en el rango')
+
+    n = (1,2,3,int(sizeSigtings) -2,int(sizeSigtings) -1,int(sizeSigtings))
+
+    if sizeSigtings <= 6:
+        for x in lt.iterator(rangedSightings):
+            print(x)
+            print('Fecha: ', x['datetime'])
+            print('Forma: ',x['shape'])
+            print('Pais: ',x['country'])
+            print('Ciudad: ',x['city'])
+            print('Duracion: ',x['duration (seconds)'])
+    else:
+        for x in n:
+            print(x)
+            print('Fecha: ', lt.getElement(rangedSightings,x)['datetime'])
+            print('Forma: ', lt.getElement(rangedSightings,x)['shape'])
+            print('Pais: ', lt.getElement(rangedSightings,x)['country'])
+            print('Ciudad: ', lt.getElement(rangedSightings,x)['city'])
+            print('Duracion: ', lt.getElement(rangedSightings,x)['duration (seconds)'])
+
+     
 
 cont = None
 
@@ -110,6 +141,15 @@ while True:
         print('En la ciudad de ' + city + ', hubo un total de ' + str(answer[1]) + ' avistamientos. \n')
         printFirstThree(answer[2])
         printLastThree(answer[2], lt.size(answer[2]))
+
+    elif int(inputs[0]) == 4:
+        time_inf = input('Digite la duracion en segundos desde la que desea consultar')
+        time_sup = input('Digite la duracion en segundos hasta la que desea consultar')
+        time_inf = float(time_inf) 
+        time_sup = float(time_sup) 
+        printSightingsByDuration(time_inf,time_sup,cont)
+        
+    
 
     elif int(inputs[0]) == 5:
         lowerLimit = input('¿Desde qué hora desea consultar los avistamientos? (formato HH:MM) ')
