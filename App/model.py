@@ -60,6 +60,7 @@ def newAnalyzer():
     analyzer['ufos'] = lt.newList('SINGLE_LINKED', compareIds)
     analyzer['dateIndex'] = om.newMap(omaptype='BST',
                                       comparefunction=compareDates)
+    analyzer['datessIndex'] = om.newMap(omaptype='RBT')                                  
     analyzer['cityIndex'] = om.newMap(omaptype='RBT')
     analyzer['sightingsIndex'] = om.newMap(omaptype='RBT')
     analyzer['durationIndex'] = om.newMap(omaptype='RBT')
@@ -115,7 +116,22 @@ def addSigtingDuration(analyzer, ufo):
         om.put(durationTree, duration, durationInfo)
     else:
         durationInfo = me.getValue(entry)
-        om.put(durationInfo, sightingInfo['datetime'], sightingInfo)        
+        om.put(durationInfo, sightingInfo['datetime'], sightingInfo)   
+
+def addSigtingDatess(analyzer,ufo):
+    datesTree = analyzer['datessIndex']
+    sightingInfo = relevantInfo(ufo)
+    date = ufo['datetime']
+    date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+    entry = om.get(datesTree, date)
+
+    if entry is None:
+        dateInfo = om.newMap()
+        om.put(dateInfo, sightingInfo['datetime'], sightingInfo)
+        om.put(datesTree, date, dateInfo)
+    else:
+        dateInfo = me.getValue(entry)
+        om.put(dateInfo, sightingInfo['datetime'], sightingInfo)             
 
 def updateDateIndex(map, ufo):
     """
@@ -189,7 +205,9 @@ def relevantInfo(ufo):
                     'shape': ufo['shape'],
                     'country': ufo['country'],
                     'city': ufo['city'],
-                    'duration (seconds)': str(ufo['duration (seconds)']).replace('.0','')}
+                    'duration (seconds)': str(ufo['duration (seconds)']).replace('.0',''),
+                    'latitude' : ufo['latitude'],
+                    'longitude' : ufo['longitude']}
     return relevantData
 
 # Funciones de consulta
@@ -318,9 +336,34 @@ def totalSigtingsWitLongestDuration(cont):
 
     return maxDuration, sizeMaxDuration
 
+def oldestdatesighting(cont):
+
+    minDate = om.minKey(cont)
+    
+
+    maxDateTree = om.get(cont,minDate)
+
+    
+
+    
+
+    maxDateTree = maxDateTree['value']
+
+    
+
+    
+
+    sizeMinDateTree = om.size(maxDateTree)
+
+    return minDate, sizeMinDateTree
+
+    
+
+       
+
 def sightingsByLimitTimes(time_inf,time_sup,cont):
 
-    print(time_inf,time_sup)
+    
 
     sightingsTree = cont
     sightings = om.values(sightingsTree, time_inf, time_sup)
@@ -345,7 +388,32 @@ def sightingsByLimitTimes(time_inf,time_sup,cont):
 
     return returnList, sightingsAmmount
         
-        
+def rangedSightingsBydate(date_inf,date_sup,cont):
+
+    sightingsTree = cont
+    date_inf = datetime.datetime.strptime(date_inf, '%Y-%m-%d')
+    date_sup = datetime.datetime.strptime(date_sup, '%Y-%m-%d')
+    sightings = om.values(sightingsTree, date_inf, date_sup)
+    returnList = lt.newList('ARRAY_LIST')
+    sightingsSize = lt.size(sightings)
+    pos = 1
+    while pos <= sightingsSize:
+        subTree = lt.getElement(sightings, pos)
+        subList = om.valueSet(subTree)
+        subLSize = lt.size(subList)
+        n = 1
+
+        while n <= subLSize:
+            sighting = lt.getElement(subList, n)
+            lt.addLast(returnList, sighting)
+            n +=1
+        pos += 1
+
+    sightingsAmmount = lt.size(returnList)
+    
+    returnList = merge.sort(returnList, compareDates2)
+
+    return returnList, sightingsAmmount        
 
  
 
@@ -385,6 +453,17 @@ def compareDates(date1, date2):
         return 1
     else:
         return -1
+
+def compareDates2(date1, date2):
+    """
+    Compara dos fechas
+    """
+    if (date1['datetime'] == date2['datetime']):
+        return 0
+    elif (date1['datetime'] > date2['datetime']):
+        return 1
+    else:
+        return -1        
 
 def compareShapes(shape1, shape2):
     """

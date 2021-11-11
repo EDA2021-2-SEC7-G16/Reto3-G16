@@ -45,7 +45,7 @@ def loadData(analyzer):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    ufosfile = cf.data_dir + 'UFOS-utf8-large.csv'
+    ufosfile = cf.data_dir + 'UFOS-utf8-small.csv'
     input_file = csv.DictReader(open(ufosfile, encoding="utf-8"),
                                 delimiter=",")
     for ufo in input_file:
@@ -53,6 +53,7 @@ def loadData(analyzer):
         model.addSightingsPerCity(analyzer, ufo)
         model.addSightingTimes(analyzer, ufo)
         model.addSigtingDuration(analyzer,ufo)
+        model.addSigtingDatess(analyzer,ufo)
     return analyzer
 
 # Funciones de ordenamiento
@@ -105,10 +106,22 @@ def totalSigtingsWitLongestDuration(cont):
 
     return model.totalSigtingsWitLongestDuration(cont)
     
+def oldestdatesighting(cont):
+
+    cont = cont["datessIndex"]
+
+    return model.oldestdatesighting(cont)    
+    
 def sightingsByLimitTimes(time_inf,time_sup,cont):
 
     cont = cont["durationIndex"]
 
     return model.sightingsByLimitTimes(time_inf,time_sup,cont)
+
+def rangedSightingsBydate(date_inf,date_sup,cont):
+
+    cont = cont["datessIndex"]
+
+    return model.rangedSightingsBydate(date_inf,date_sup,cont)    
 
 

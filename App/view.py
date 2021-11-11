@@ -76,6 +76,7 @@ def printMenu():
     print("3- Contar los avistamientos en una ciudad")
     print("4- Contar los avistmientos por duracion")
     print("5- Contar avistamientos por hora/minutos del día")
+    print("6- Contar los avistamientos en un rango de fechas")
 
 def printSightingsByDuration(time_inf,time_sup,cont):
 
@@ -105,6 +106,38 @@ def printSightingsByDuration(time_inf,time_sup,cont):
             print('Pais: ', lt.getElement(rangedSightings,x)['country'])
             print('Ciudad: ', lt.getElement(rangedSightings,x)['city'])
             print('Duracion: ', lt.getElement(rangedSightings,x)['duration (seconds)'])
+
+def printSightingsByDate(date_inf,date_sup,cont):
+
+    oldest_date, size_oldestdate = controller.oldestdatesighting(cont)
+
+    print('La fecha mas antigua de la cual se tiene avistamientos es : ', oldest_date, ' con un total de avistamientos de: ', size_oldestdate)
+
+    final_trees, sizeSightings  = controller.rangedSightingsBydate(date_inf,date_sup,cont)
+
+    print('Hay ', sizeSightings , ' avistamientos en el rango')
+
+    n = (1,2,3,int(sizeSightings) -2,int(sizeSightings) -1,int(sizeSightings))
+
+    if sizeSightings <= 6:
+        for x in lt.iterator(final_trees):
+            print(x)
+            print('Fecha: ', x['datetime'])
+            print('Forma: ',x['shape'])
+            print('Pais: ',x['country'])
+            print('Ciudad: ',x['city'])
+            print('Latitud: ',x['latitude'])
+            print('Longitud: ',x['longitude'])
+    else:
+        for x in n:
+            print(x)
+            print('Fecha: ', lt.getElement(final_trees,x)['datetime'])
+            print('Forma: ', lt.getElement(final_trees,x)['shape'])
+            print('Pais: ', lt.getElement(final_trees,x)['country'])
+            print('Ciudad: ', lt.getElement(final_trees,x)['city'])
+            print('Latitud: ', lt.getElement(final_trees,x)['latitude'])
+            print('Longitud: ', lt.getElement(final_trees,x)['longitude'])
+         
 
      
 
@@ -169,6 +202,12 @@ while True:
         size = lt.size(answer[0])
         printFirstThree(answer[0])
         printLastThree(answer[0], size)
+
+    elif int(inputs[0]) == 6:
+        date_inf = input('Digite la la fecha inferior en el fomrato AAAA-MM-DD')
+        date_sup = input('Digite la la fecha superior en el fomrato AAAA-MM-DD')
+         
+        printSightingsByDate(date_inf,date_sup,cont)
 
     else:
         sys.exit(0)
