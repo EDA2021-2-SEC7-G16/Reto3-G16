@@ -532,9 +532,9 @@ def compareLatitude(l1, l2):
     """
     Compara dos fechas
     """
-    if (l1['latitude'] == l2['latitude']):
+    if (float(l1['latitude']) == float(l2['latitude'])):
         return 0
-    elif (l1['latitude'] > l2['latitude']):
+    elif (float(l1['latitude']) > float(l2['latitude'])):
         return 1
     else:
         return -1     
